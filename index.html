@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111314">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="bill.y2k">
+  <title>bill.y2k Command Dashboard</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logoOval"><div class="logoText">BILL.Y2K</div></div>
+      <div class="brandTitle">
+        <h1>Command Dashboard</h1>
+        <p>price smart • sell clean</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="row">
+      <div>
+        <h2>Optimized Overview</h2>
+        <p>Marketing, habits, Vinted resale, listings and sold money in one offline dashboard. Very organised. Suspiciously adult.</p>
+      </div>
+      <div class="badge" id="versionLabel">v3</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><small>Project score</small><strong id="kpiScore">0%</strong></div>
+      <div class="kpi"><small>Tasks</small><strong id="kpiTasks">0/0</strong></div>
+      <div class="kpi"><small>Vinted sold</small><strong class="money" id="kpiSold">£0</strong></div>
+      <div class="kpi"><small>Sold profit</small><strong class="money" id="kpiProfit">£0</strong></div>
+    </div>
+    <div class="progressWrap" style="margin-top:12px"><div class="progressBar" id="overallBar"></div></div>
+  </section>
+
+  <section class="view active" id="view-dash">
+    <div class="card">
+      <div class="row">
+        <div><h3 id="selectedDayTitle">Day</h3><p class="sub">Choose a phase day and tick through the work.</p></div>
+        <select class="input" id="quickDaySelect" style="max-width:112px"></select>
+      </div>
+      <div class="row" style="margin:10px 0 8px"><span class="sub">Day completion</span><strong id="selectedDayPct">0%</strong></div>
+      <div class="progressWrap"><div class="progressBar" id="selectedDayBar"></div></div>
+    </div>
+    <div class="card"><h3>Phase Days</h3><div class="dayStrip" id="dayStrip"></div></div>
+    <div class="card"><div class="row"><h3>Today’s Blocks</h3><button class="secondary" onclick="openTaskModal()">+ Add</button></div><div id="todayTaskList"></div></div>
+    <div class="card"><h3>Analysis</h3><div id="analysisBars"></div></div>
+  </section>
+
+  <section class="view" id="view-vinted">
+    <div class="card">
+      <div class="row">
+        <div><h3>Vinted Resell</h3><p class="sub" id="vCounts">0 listed • 0 sold • 0 total</p></div>
+        <button class="primary" onclick="openVintedModal()">+ Item</button>
+      </div>
+      <div class="vintedTop" style="margin-top:12px">
+        <div class="vintedCard"><small>Total spent</small><strong id="vSpent">£0</strong></div>
+        <div class="vintedCard"><small>Listed value</small><strong id="vListed">£0</strong></div>
+        <div class="vintedCard"><small>Sold total</small><strong class="green" id="vSold">£0</strong></div>
+        <div class="vintedCard"><small>Sold profit</small><strong class="green" id="vProfit">£0</strong></div>
+      </div>
+      <div class="vintedCard" style="margin-top:9px"><small>Potential profit at list prices</small><strong class="green" id="vPotential">£0</strong></div>
+    </div>
+    <div class="card">
+      <div class="filters" id="vintedFilters">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="listed">Listed</button>
+        <button class="chip" data-filter="sold">Sold</button>
+        <button class="chip" data-filter="main">Main Pieces</button>
+        <button class="chip" data-filter="joblot">Joblot</button>
+      </div>
+      <div class="vintedList" id="vintedList"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-tracker">
+    <div class="card"><h3>Habit Grid</h3><p class="sub">Rows are actions, columns are phase days. Tap boxes to mark done.</p><div class="habitShell"><div class="habitGrid" id="habitGrid"></div></div></div>
+    <div class="card"><h3>Habit Analysis</h3><div id="habitAnalysis"></div></div>
+  </section>
+
+  <section class="view" id="view-tasks">
+    <div class="card">
+      <div class="row"><h3>Task Control</h3><button class="secondary" onclick="openTaskModal()">+ Add</button></div>
+      <div class="filters" id="taskFilters">
+        <button class="chip active" data-filter="day">Selected day</button>
+        <button class="chip" data-filter="open">Open</button>
+        <button class="chip" data-filter="done">Done</button>
+        <button class="chip" data-filter="outreach">Outreach</button>
+        <button class="chip" data-filter="all">All</button>
+      </div>
+      <div id="taskList"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-vault">
+    <div class="card">
+      <h3>Quick Numbers</h3>
+      <div class="statBtns">
+        <button class="statBtn" onclick="changeStat('dms',1)"><small>DMs</small><strong id="dmsCount">0</strong></button>
+        <button class="statBtn" onclick="changeStat('looms',1)"><small>Looms</small><strong id="loomsCount">0</strong></button>
+        <button class="statBtn" onclick="changeStat('posts',1)"><small>Posts</small><strong id="postsCount">0</strong></button>
+        <button class="statBtn" onclick="changeStat('replies',1)"><small>Replies</small><strong id="repliesCount">0</strong></button>
+      </div>
+    </div>
+    <div class="card"><div class="row"><h3>Lead Tracker</h3><button class="secondary" onclick="openLeadModal()">+ Add</button></div><div id="leadList"></div></div>
+    <div class="card"><div class="row"><h3>Setup Vault</h3><button class="secondary" onclick="openAccountModal()">+ Add</button></div><div id="accountList"></div></div>
+    <div class="card"><h3>Content Vault</h3><div class="form"><input class="input" id="newContentTitle" placeholder="New content idea"><select class="input" id="newContentType"><option>Journey</option><option>Vinted</option><option>Audit</option><option>Breakdown</option><option>Education</option></select><button class="primary" onclick="addContent()">Add content idea</button></div><div id="contentList"></div></div>
+    <div class="card"><h3>Notes</h3><textarea id="notes" oninput="saveNotes()" placeholder="Scripts, listing notes, bundle ideas, reminders."></textarea></div>
+    <div class="card"><h3>Backup</h3><div class="helpBox">Export before big edits. Local storage is handy until Safari wakes up and chooses betrayal.</div><div class="form" style="margin-top:10px"><button class="secondary" onclick="exportData()">Export backup JSON</button><label class="secondary" style="text-align:center">Import backup JSON<input type="file" accept="application/json" onchange="importData(this)" hidden></label><button class="danger" onclick="resetData()">Reset dashboard</button></div></div>
+  </section>
+
+  <nav class="nav">
+    <button class="active" data-view="dash"><span>⌁</span>Dash</button>
+    <button data-view="vinted"><span>£</span>Vinted</button>
+    <button data-view="tracker"><span>□</span>Grid</button>
+    <button data-view="tasks"><span>✓</span>Tasks</button>
+    <button data-view="vault"><span>◇</span>Vault</button>
+  </nav>
+</main>
+
+<div class="modal" id="taskModal"><div class="modalPanel"><h3 id="taskModalTitle">Edit task</h3><div class="form"><input type="hidden" id="taskId"><input class="input" id="taskTitleInput" placeholder="Task title"><textarea id="taskNotesInput" placeholder="Notes"></textarea><div class="grid2"><input class="input" id="taskDate" type="date"><input class="input" id="taskTime" type="time"><input class="input" id="taskDay" type="number" min="1"><input class="input" id="taskCategory" placeholder="Category"></div><button class="primary" onclick="saveTask()">Save task</button><button class="danger" onclick="deleteTask()">Delete task</button><button class="ghost" onclick="closeModals()">Close</button></div></div></div>
+
+<div class="modal" id="vintedModal"><div class="modalPanel"><h3 id="vintedModalTitle">Edit Vinted Item</h3><div class="form"><input type="hidden" id="vId"><div class="grid2"><input class="input" id="vCode" placeholder="Code"><select class="input" id="vGroup"><option>Main Pieces</option><option>Joblot</option><option>Other</option></select></div><input class="input" id="vName" placeholder="Item name"><div class="grid2"><input class="input" id="vBought" type="number" step="0.01" placeholder="Bought price"><input class="input" id="vOnline" placeholder="Online check e.g. £20-£40"><input class="input" id="vList" type="number" step="0.01" placeholder="List price"><input class="input" id="vSoldPrice" type="number" step="0.01" placeholder="Sold price"></div><div class="grid2"><select class="input" id="vStatus"><option>Not listed</option><option>Listed</option><option>Sold</option></select><input class="input" id="vProfitability" type="number" min="0" max="100" placeholder="Profitability %"></div><input class="input" id="vImage" placeholder="Image URL optional"><textarea id="vNotes" placeholder="Notes"></textarea><button class="primary" onclick="saveVintedItem()">Save item</button><button class="danger" onclick="deleteVintedItem()">Delete item</button><button class="ghost" onclick="closeModals()">Close</button></div></div></div>
+
+<div class="modal" id="leadModal"><div class="modalPanel"><h3>Edit Lead</h3><div class="form"><input type="hidden" id="leadId"><input class="input" id="leadBusiness" placeholder="Business"><input class="input" id="leadNiche" placeholder="Niche"><input class="input" id="leadProblem" placeholder="Problem"><select class="input" id="leadStatus"><option>New</option><option>DM sent</option><option>Warm</option><option>Loom sent</option><option>Call booked</option><option>Closed</option><option>Dead</option></select><input class="input" id="leadNext" placeholder="Next action"><button class="primary" onclick="saveLead()">Save lead</button><button class="ghost" onclick="closeModals()">Close</button></div></div></div>
+
+<div class="modal" id="accountModal"><div class="modalPanel"><h3>Edit Setup Item</h3><div class="form"><input type="hidden" id="accountId"><input class="input" id="accountName" placeholder="Name"><input class="input" id="accountHandle" placeholder="Handle / detail"><button class="primary" onclick="saveAccount()">Save setup item</button><button class="ghost" onclick="closeModals()">Close</button></div></div></div>
+
+<script src="app.js"></script>
+</body>
+</html>

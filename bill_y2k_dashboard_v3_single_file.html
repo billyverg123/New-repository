@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111314">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="bill.y2k">
+  <title>bill.y2k Command Dashboard</title>
+  
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+:root{
+  --bg:#070808; --panel:#0e1011; --panel2:#141719; --panel3:#1b1f22;
+  --line:rgba(230,230,230,.18); --line2:rgba(255,255,255,.32);
+  --text:#f4f4f1; --muted:#a4a4a0; --soft:#d8d8d3;
+  --green:#78c85c; --green2:#9fe36f; --yellow:#ffd45b; --red:#ff5a51;
+  --steel:#cfd1d2; --dark:#050606; --shadow:0 24px 70px rgba(0,0,0,.48);
+  --radius:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:
+radial-gradient(circle at 50% -10%,rgba(255,255,255,.08),transparent 28%),
+radial-gradient(circle at 90% 10%,rgba(120,200,92,.12),transparent 22%),
+linear-gradient(145deg,#080909,#050606 55%,#090a0a);color:var(--text);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:
+linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px),
+linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px);background-size:54px 54px;opacity:.75;mask-image:radial-gradient(circle at 50% 20%,black,transparent 78%);z-index:-1}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.08),transparent 26%);mix-blend-mode:screen;z-index:-1}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;color:inherit}
+.app{max-width:1240px;margin:0 auto;padding:14px 12px 98px}
+.topbar{position:sticky;top:0;z-index:50;margin:-14px -12px 14px;padding:14px 12px;background:rgba(7,8,8,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.brand{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logoOval{position:relative;min-width:132px;height:52px;border-radius:999px;display:grid;place-items:center;overflow:hidden;background:linear-gradient(145deg,#050505,#1b1d1e 45%,#050505);border:1px solid rgba(255,255,255,.42);box-shadow:inset 0 0 18px rgba(255,255,255,.12),0 0 24px rgba(255,255,255,.06)}
+.logoOval:before,.logoOval:after{content:"";position:absolute;inset:5px;border:1px solid rgba(255,255,255,.55);border-radius:999px}
+.logoOval:after{inset:9px;border-color:rgba(255,255,255,.22)}
+.logoText{font-weight:950;font-style:italic;letter-spacing:-1px;font-size:22px;background:linear-gradient(#fff,#bcbcbc 45%,#5b5b5b 52%,#efefef);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 2px 0 #000}
+.brandTitle{min-width:0;text-align:right}
+.brandTitle h1{font-size:18px;margin:0;letter-spacing:.05em;text-transform:uppercase}
+.brandTitle p{font-size:11px;margin:3px 0 0;color:var(--muted);letter-spacing:.2em;text-transform:uppercase}
+.badge{font-size:11px;padding:7px 10px;border-radius:999px;border:1px solid var(--line);color:var(--green);background:rgba(120,200,92,.08);white-space:nowrap}
+.hero{border:1px solid var(--line2);background:linear-gradient(160deg,rgba(22,24,25,.96),rgba(8,9,9,.92));border-radius:24px;padding:15px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;left:18px;right:18px;top:9px;height:1px;background:linear-gradient(90deg,transparent,#fff,transparent);opacity:.45}
+.hero h2{font-size:34px;line-height:.98;margin:0 0 6px;text-transform:uppercase;font-style:italic;letter-spacing:-.03em;background:linear-gradient(#fff,#bfbfbf 45%,#606060 53%,#f6f6f6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}
+.kpi{border:1px solid var(--line);border-radius:16px;padding:12px;background:linear-gradient(145deg,rgba(20,23,25,.86),rgba(7,8,8,.72));box-shadow:inset 0 0 18px rgba(255,255,255,.025)}
+.kpi small{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;font-size:9px}
+.kpi strong{display:block;font-size:22px;margin-top:5px;color:var(--text)}
+.kpi .money{color:var(--green);text-shadow:0 0 16px rgba(120,200,92,.18)}
+.card{border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,rgba(18,20,21,.90),rgba(8,9,9,.80));padding:14px;margin:12px 0;box-shadow:0 16px 44px rgba(0,0,0,.35);position:relative;overflow:hidden}
+.card:before{content:"";position:absolute;left:12px;right:12px;top:7px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent)}
+.card h3{font-size:18px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.08em}
+.sub{font-size:12px;color:var(--muted);line-height:1.45}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.progressWrap{height:12px;background:#27292a;border-radius:999px;border:1px solid rgba(255,255,255,.17);overflow:hidden}
+.progressBar{height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--yellow),var(--green));border-radius:999px;transition:.25s ease}
+.view{display:none;animation:fade .16s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:90;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:rgba(7,8,8,.9);backdrop-filter:blur(20px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.nav button{border:1px solid transparent;background:transparent;color:var(--muted);border-radius:14px;padding:8px 2px;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+.nav button span{display:block;font-size:17px;margin-bottom:2px}
+.nav button.active{color:var(--text);background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(120,200,92,.08));border-color:rgba(255,255,255,.24)}
+.input,select,textarea{width:100%;border:1px solid var(--line);background:rgba(5,6,6,.72);color:var(--text);border-radius:14px;padding:12px;outline:none}
+select option{background:#111314;color:var(--text)}
+textarea{min-height:105px;resize:vertical}
+.primary,.secondary,.danger,.ghost{border-radius:14px;padding:11px 13px;font-weight:850}
+.primary{border:1px solid rgba(159,227,111,.65);background:linear-gradient(145deg,#7ccd5e,#4b8b3f);color:#071008;box-shadow:0 0 24px rgba(120,200,92,.18)}
+.secondary{border:1px solid rgba(255,255,255,.27);background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025));color:var(--text)}
+.danger{border:1px solid rgba(255,90,81,.48);background:rgba(255,90,81,.10);color:#ffd4d0}
+.ghost{border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted)}
+.task{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:start;padding:12px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(14,16,17,.88),rgba(5,6,6,.70));border-radius:17px;margin:9px 0}
+.check{width:30px;height:30px;border-radius:10px;border:2px solid rgba(120,200,92,.7);background:rgba(120,200,92,.08);color:transparent;display:grid;place-items:center;font-weight:950}
+.task.done .check{background:var(--green);color:#071008}
+.task.done .taskTitle{text-decoration:line-through;color:var(--muted)}
+.taskMeta{font-size:11px;color:var(--green);font-weight:850;margin-bottom:3px;text-transform:uppercase;letter-spacing:.08em}
+.taskTitle{font-size:15px;font-weight:900;line-height:1.25}
+.taskNotes{font-size:12.5px;color:var(--muted);line-height:1.38;margin-top:5px}
+.editBtn{border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);border-radius:12px;padding:8px 9px;font-size:12px}
+.dayStrip{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px}
+.dayBtn{min-width:92px;border:1px solid var(--line);background:rgba(14,16,17,.78);color:var(--muted);border-radius:15px;padding:10px}
+.dayBtn.active{background:linear-gradient(145deg,rgba(120,200,92,.18),rgba(255,255,255,.08));color:var(--text);border-color:rgba(159,227,111,.48)}
+.dayBtn strong{display:block;color:var(--text)}
+.dayBtn small{display:block;font-size:10px;margin-top:3px}
+.habitShell{overflow:auto;padding-bottom:4px}
+.habitGrid{min-width:710px;display:grid;grid-template-columns:165px repeat(14,36px);gap:8px;align-items:center}
+.weekHead{font-size:10px;color:var(--muted);text-align:center}
+.habitName{height:36px;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--soft);font-weight:850}
+.habitCell{width:36px;height:36px;border-radius:9px;border:2px solid rgba(120,200,92,.55);background:rgba(120,200,92,.06);color:transparent;display:grid;place-items:center}
+.habitCell.on{background:var(--green);color:#071008;border-color:transparent;box-shadow:0 0 16px rgba(120,200,92,.22)}
+.miniBarRow{display:grid;grid-template-columns:1fr 52px;gap:8px;align-items:center;margin:10px 0}
+.miniLabel{font-size:12px;color:var(--soft);display:flex;justify-content:space-between;gap:10px}
+.miniPercent{font-size:12px;color:var(--green);font-weight:900;text-align:right}
+.analysisBar{height:11px;border-radius:999px;background:#282a2b;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+.analysisFill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--red),var(--yellow),var(--green));width:0}
+.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px}
+.chip{white-space:nowrap;border:1px solid var(--line);background:rgba(14,16,17,.8);color:var(--muted);padding:9px 12px;border-radius:999px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.chip.active{background:var(--green);color:#071008;border-color:transparent}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.form{display:grid;gap:10px}
+.statBtns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.statBtn{background:linear-gradient(145deg,rgba(20,23,25,.90),rgba(7,8,8,.72));border:1px solid var(--line);color:var(--text);padding:12px 8px;border-radius:16px}
+.statBtn small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.09em}
+.statBtn strong{font-size:20px}
+.listItem{padding:12px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(14,16,17,.88),rgba(5,6,6,.7));border-radius:17px;margin:9px 0}
+.listItem small{color:var(--green);font-weight:850;text-transform:uppercase;letter-spacing:.08em}
+.listItem strong{display:block;margin-top:5px}
+.listItem p{margin:5px 0 0;color:var(--muted);font-size:12.5px;line-height:1.38}
+/* Vinted */
+.vintedTop{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.vintedCard{border:1px solid rgba(255,255,255,.28);border-radius:16px;padding:12px;background:linear-gradient(145deg,rgba(20,23,25,.9),rgba(8,9,9,.74));box-shadow:inset 0 0 16px rgba(255,255,255,.025)}
+.vintedCard small{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.12em}
+.vintedCard strong{display:block;font-size:24px;margin-top:6px}
+.vintedCard strong.green{color:var(--green)}
+.vintedList{display:grid;gap:10px}
+.itemCard{border:1px solid var(--line2);border-radius:18px;background:linear-gradient(145deg,rgba(14,16,17,.95),rgba(6,7,7,.78));overflow:hidden}
+.itemInner{display:grid;grid-template-columns:86px 1fr;gap:12px;padding:12px}
+.itemImg{height:104px;border-radius:13px;background:linear-gradient(145deg,#f3f3f3,#bfbfbf);display:grid;place-items:center;color:#111;font-weight:950;text-align:center;font-size:13px;overflow:hidden}
+.itemImg img{width:100%;height:100%;object-fit:cover}
+.itemHead{display:flex;justify-content:space-between;gap:8px;align-items:start;border-bottom:1px dotted rgba(255,255,255,.24);padding-bottom:8px}
+.itemCode{font-weight:950;font-size:18px;color:var(--green);letter-spacing:.06em}
+.itemName{font-weight:850;font-size:15px;line-height:1.25}
+.statusPill{font-size:10px;text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--line);border-radius:999px;padding:6px 8px;color:var(--muted);white-space:nowrap}
+.statusPill.Listed{color:var(--yellow);border-color:rgba(255,212,91,.45);background:rgba(255,212,91,.08)}
+.statusPill.Sold{color:var(--green);border-color:rgba(120,200,92,.55);background:rgba(120,200,92,.10)}
+.priceGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}
+.priceBox{border-right:1px solid var(--line);padding-right:6px}
+.priceBox:last-child{border-right:0}
+.priceBox small{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.12em}
+.priceBox strong{font-size:15px}
+.priceBox .profit{color:var(--green)}
+.itemActions{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:0 12px 12px}
+.itemActions button{font-size:11px;padding:9px 6px;border-radius:12px}
+.modal{position:fixed;inset:0;z-index:130;display:none;background:rgba(0,0,0,.72);padding:16px;align-items:flex-end}
+.modal.open{display:flex}
+.modalPanel{width:100%;max-width:760px;margin:0 auto;background:#101213;border:1px solid rgba(255,255,255,.24);border-radius:24px;padding:16px;box-shadow:var(--shadow);max-height:92vh;overflow:auto}
+.modalPanel h3{margin:0 0 12px;text-transform:uppercase;letter-spacing:.08em}
+.helpBox{font-size:13px;color:var(--muted);line-height:1.48;background:rgba(5,6,6,.44);border:1px solid var(--line);border-radius:16px;padding:12px}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+@media(max-width:760px){
+  .kpis,.vintedTop{grid-template-columns:repeat(2,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .statBtns{grid-template-columns:repeat(2,1fr)}
+  .hero h2{font-size:29px}
+  .priceGrid{grid-template-columns:repeat(2,1fr)}
+  .itemActions{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:390px){
+  .logoOval{min-width:112px;height:46px}
+  .logoText{font-size:18px}
+  .brandTitle h1{font-size:14px}
+  .brandTitle p{font-size:9px}
+  .hero h2{font-size:25px}
+  .itemInner{grid-template-columns:74px 1fr}
+  .itemImg{height:96px}
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logoOval"><div class="logoText">BILL.Y2K</div></div>
+      <div class="brandTitle">
+        <h1>Command Dashboard</h1>
+        <p>price smart • sell clean</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="row">
+      <div>
+        <h2>Optimized Overview</h2>
+        <p>Marketing, habits, Vinted resale, listings and sold money in one offline dashboard. Very organised. Suspiciously adult.</p>
+      </div>
+      <div class="badge" id="versionLabel">v3</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><small>Project score</small><strong id="kpiScore">0%</strong></div>
+      <div class="kpi"><small>Tasks</small><strong id="kpiTasks">0/0</strong></div>
+      <div class="kpi"><small>Vinted sold</small><strong class="money" id="kpiSold">£0</strong></div>
+      <div class="kpi"><small>Sold profit</small><strong class="money" id="kpiProfit">£0</strong></div>
+    </div>
+    <div class="progressWrap" style="margin-top:12px"><div class="progressBar" id="overallBar"></div></div>
+  </section>
+
+  <section class="view active" id="view-dash">
+    <div class="card">
+      <div class="row">
+        <div><h3 id="selectedDayTitle">Day</h3><p class="sub">Choose a phase day and tick through the work.</p></div>
+        <select class="input" id="quickDaySelect" style="max-width:112px"></select>
+      </div>
+      <div class="row" style="margin:10px 0 8px"><span class="sub">Day completion</span><strong id="selectedDayPct">0%</strong></div>
+      <div class="progressWrap"><div class="progressBar" id="selectedDayBar"></div></div>
+    </div>
+    <div class="card"><h3>Phase Days</h3><div class="dayStrip" id="dayStrip"></div></div>
+    <div class="card"><div class="row"><h3>Today’s Blocks</h3><button class="secondary" onclick="openTaskModal()">+ Add</button></div><div id="todayTaskList"></div></div>
+    <div class="card"><h3>Analysis</h3><div id="analysisBars"></div></div>
+  </section>
+
+  <section class="view" id="view-vinted">
+    <div class="card">
+      <div class="row">
+        <div><h3>Vinted Resell</h3><p class="sub" id="vCounts">0 listed • 0 sold • 0 total</p></div>
+        <button class="primary" onclick="openVintedModal()">+ Item</button>
+      </div>
+      <div class="vintedTop" style="margin-top:12px">
+        <div class="vintedCard"><small>Total spent</small><strong id="vSpent">£0</strong></div>
+        <div class="vintedCard"><small>Listed value</small><strong id="vListed">£0</strong></div>
+        <div class="vintedCard"><small>Sold total</small><strong class="green" id="vSold">£0</strong></div>
+        <div class="vintedCard"><small>Sold profit</small><strong class="green" id="vProfit">£0</strong></div>
+      </div>
+      <div class="vintedCard" style="margin-top:9px"><small>Potential profit at list prices</small><strong class="green" id="vPotential">£0</strong></div>
+    </div>
+    <div class="card">
+      <div class="filters" id="vintedFilters">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="listed">Listed</button>
+        <button class="chip" data-filter="sold">Sold</button>
+        <button class="chip" data-filter="main">Main Pieces</button>
+        <button class="chip" data-filter="joblot">Joblot</button>
+      </div>
+      <div class="vintedList" id="vintedList"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-tracker">
+    <div class="card"><h3>Habit Grid</h3><p class="sub">Rows are actions, columns are phase days. Tap boxes to mark done.</p><div class="habitShell"><div class="habitGrid" id="habitGrid"></div></div></div>
+    <div class="card"><h3>Habit Analysis</h3><div id="habitAnalysis"></div></div>
+  </section>
+
+  <section class="view" id="view-tasks">
+    <div class="card">
+      <div class="row"><h3>Task Control</h3><button class="secondary" onclick="openTaskModal()">+ Add</button></div>
+      <div class="filters" id="taskFilters">
+        <button class="chip active" data-filter="day">Selected day</button>
+        <button class="chip" data-filter="open">Open</button>
+        <button class="chip" data-filter="done">Done</button>
+        <button class="chip" data-filter="outreach">Outreach</button>
+        <button class="chip" data-filter="all">All</button>
+      </div>
+      <div id="taskList"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-vault">
+    <div class="card">
+      <h3>Quick Numbers</h3>
+      <div class="statBtns">
+        <button class="statBtn" onclick="changeStat('dms',1)"><small>DMs</small><strong id="dmsCount">0</strong></button>
+        <button class="statBtn" onclick="changeStat('looms',1)"><small>Looms</small><strong id="loomsCount">0</strong></button>
+        <button class="statBtn" onclick="changeStat('posts',1)"><small>Posts</small><strong id="postsCount">0</strong></button>
+        <button class="statBtn" onclick="changeStat('replies',1)"><small>Replies</small><strong id="repliesCount">0</strong></button>
+      </div>
+    </div>
+    <div class="card"><div class="row"><h3>Lead Tracker</h3><button class="secondary" onclick="openLeadModal()">+ Add</button></div><div id="leadList"></div></div>
+    <div class="card"><div class="row"><h3>Setup Vault</h3><button class="secondary" onclick="openAccountModal()">+ Add</button></div><div id="accountList"></div></div>
+    <div class="card"><h3>Content Vault</h3><div class="form"><input class="input" id="newContentTitle" placeholder="New content idea"><select class="input" id="newContentType"><option>Journey</option><option>Vinted</option><option>Audit</option><option>Breakdown</option><option>Education</option></select><button class="primary" onclick="addContent()">Add content idea</button></div><div id="contentList"></div></div>
+    <div class="card"><h3>Notes</h3><textarea id="notes" oninput="saveNotes()" placeholder="Scripts, listing notes, bundle ideas, reminders."></textarea></div>
+    <div class="card"><h3>Backup</h3><div class="helpBox">Export before big edits. Local storage is handy until Safari wakes up and chooses betrayal.</div><div class="form" style="margin-top:10px"><button class="secondary" onclick="exportData()">Export backup JSON</button><label class="secondary" style="text-align:center">Import backup JSON<input type="file" accept="application/json" onchange="importData(this)" hidden></label><button class="danger" onclick="resetData()">Reset dashboard</button></div></div>
+  </section>
+
+  <nav class="nav">
+    <button class="active" data-view="dash"><span>⌁</span>Dash</button>
+    <button data-view="vinted"><span>£</span>Vinted</button>
+    <button data-view="tracker"><span>□</span>Grid</button>
+    <button data-view="tasks"><span>✓</span>Tasks</button>
+    <button data-view="vault"><span>◇</span>Vault</button>
+  </nav>
+</main>
+
+<div class="modal" id="taskModal"><div class="modalPanel"><h3 id="taskModalTitle">Edit task</h3><div class="form"><input type="hidden" id="taskId"><input class="input" id="taskTitleInput" placeholder="Task title"><textarea id="taskNotesInput" placeholder="Notes"></textarea><div class="grid2"><input class="input" id="taskDate" type="date"><input class="input" id="taskTime" type="time"><input class="input" id="taskDay" type="number" min="1"><input class="input" id="taskCategory" placeholder="Category"></div><button class="primary" onclick="saveTask()">Save task</button><button class="danger" onclick="deleteTask()">Delete task</button><button class="ghost" onclick="closeModals()">Close</button></div></div></div>
+
+<div class="modal" id="vintedModal"><div class="modalPanel"><h3 id="vintedModalTitle">Edit Vinted Item</h3><div class="form"><input type="hidden" id="vId"><div class="grid2"><input class="input" id="vCode" placeholder="Code"><select class="input" id="vGroup"><option>Main Pieces</option><option>Joblot</option><option>Other</option></select></div><input class="input" id="vName" placeholder="Item name"><div class="grid2"><input class="input" id="vBought" type="number" step="0.01" placeholder="Bought price"><input class="input" id="vOnline" placeholder="Online check e.g. £20-£40"><input class="input" id="vList" type="number" step="0.01" placeholder="List price"><input class="input" id="vSoldPrice" type="number" step="0.01" placeholder="Sold price"></div><div class="grid2"><select class="input" id="vStatus"><option>Not listed</option><option>Listed</option><option>Sold</option></select><input class="input" id="vProfitability" type="number" min="0" max="100" placeholder="Profitability %"></div><input class="input" id="vImage" placeholder="Image URL optional"><textarea id="vNotes" placeholder="Notes"></textarea><button class="primary" onclick="saveVintedItem()">Save item</button><button class="danger" onclick="deleteVintedItem()">Delete item</button><button class="ghost" onclick="closeModals()">Close</button></div></div></div>
+
+<div class="modal" id="leadModal"><div class="modalPanel"><h3>Edit Lead</h3><div class="form"><input type="hidden" id="leadId"><input class="input" id="leadBusiness" placeholder="Business"><input class="input" id="leadNiche" placeholder="Niche"><input class="input" id="leadProblem" placeholder="Problem"><select class="input" id="leadStatus"><option>New</option><option>DM sent</option><option>Warm</option><option>Loom sent</option><option>Call booked</option><option>Closed</option><option>Dead</option></select><input class="input" id="leadNext" placeholder="Next action"><button class="primary" onclick="saveLead()">Save lead</button><button class="ghost" onclick="closeModals()">Close</button></div></div></div>
+
+<div class="modal" id="accountModal"><div class="modalPanel"><h3>Edit Setup Item</h3><div class="form"><input type="hidden" id="accountId"><input class="input" id="accountName" placeholder="Name"><input class="input" id="accountHandle" placeholder="Handle / detail"><button class="primary" onclick="saveAccount()">Save setup item</button><button class="ghost" onclick="closeModals()">Close</button></div></div></div>
+
+<script>
+const DEFAULT_DATA = {"version": "3.0.0", "tasks": [{"id": "d1-t1", "day": 1, "date": "2026-06-18", "time": "07:30", "title": "Ad swipe + learning", "category": "Learning", "notes": "Save 3 ads and write why they work.", "done": false}, {"id": "d1-t2", "day": 1, "date": "2026-06-18", "time": "12:30", "title": "Lead capture", "category": "Leads", "notes": "Save 5 target businesses and note their weak point.", "done": false}, {"id": "d1-t3", "day": 1, "date": "2026-06-18", "time": "18:30", "title": "Setup command centre", "category": "Build", "notes": "Build the folder system, lead tracker, and core offer.", "done": false}, {"id": "d1-t4", "day": 1, "date": "2026-06-18", "time": "19:15", "title": "Content creation", "category": "Content", "notes": "Create one proof post or carousel from today’s task.", "done": false}, {"id": "d1-t5", "day": 1, "date": "2026-06-18", "time": "20:15", "title": "Outreach / audit block", "category": "Outreach", "notes": "Send DMs, prep Looms, or record audit videos.", "done": false}, {"id": "d1-t6", "day": 1, "date": "2026-06-18", "time": "21:00", "title": "Daily review", "category": "Review", "notes": "Log posts, leads, DMs, audits, replies, and tomorrow’s next action.", "done": false}, {"id": "d2-t1", "day": 2, "date": "2026-06-19", "time": "07:30", "title": "Ad swipe + learning", "category": "Learning", "notes": "Save 3 ads and write why they work.", "done": false}, {"id": "d2-t2", "day": 2, "date": "2026-06-19", "time": "12:30", "title": "Lead capture", "category": "Leads", "notes": "Save 5 target businesses and note their weak point.", "done": false}, {"id": "d2-t3", "day": 2, "date": "2026-06-19", "time": "18:30", "title": "Accounts + handles", "category": "Build", "notes": "Create accounts, bios, and email setup.", "done": false}, {"id": "d2-t4", "day": 2, "date": "2026-06-19", "time": "19:15", "title": "Content creation", "category": "Content", "notes": "Create one proof post or carousel from today’s task.", "done": false}, {"id": "d2-t5", "day": 2, "date": "2026-06-19", "time": "20:15", "title": "Outreach / audit block", "category": "Outreach", "notes": "Send DMs, prep Looms, or record audit videos.", "done": false}, {"id": "d2-t6", "day": 2, "date": "2026-06-19", "time": "21:00", "title": "Daily review", "category": "Review", "notes": "Log posts, leads, DMs, audits, replies, and tomorrow’s next action.", "done": false}, {"id": "d3-t1", "day": 3, "date": "2026-06-20", "time": "10:00", "title": "Plan sprint", "category": "Planning", "notes": "Pick one main outcome for the day.", "done": false}, {"id": "d3-t2", "day": 3, "date": "2026-06-20", "time": "10:30", "title": "Brand kit sprint", "category": "Build", "notes": "Logo draft, colour system, and post templates.", "done": false}, {"id": "d3-t3", "day": 3, "date": "2026-06-20", "time": "12:30", "title": "Brand kit sprint", "category": "Build", "notes": "Logo draft, colour system, and post templates.", "done": false}, {"id": "d3-t4", "day": 3, "date": "2026-06-20", "time": "14:00", "title": "Content batch", "category": "Content", "notes": "Record 3-4 videos or build carousel posts.", "done": false}, {"id": "d3-t5", "day": 3, "date": "2026-06-20", "time": "17:30", "title": "Post + tracker", "category": "Review", "notes": "Publish or schedule content and update tracker.", "done": false}, {"id": "d4-t1", "day": 4, "date": "2026-06-21", "time": "10:00", "title": "Plan sprint", "category": "Planning", "notes": "Pick one main outcome for the day.", "done": false}, {"id": "d4-t2", "day": 4, "date": "2026-06-21", "time": "10:30", "title": "Website + audit", "category": "Build", "notes": "Landing page copy, audit template, and Loom flow.", "done": false}, {"id": "d4-t3", "day": 4, "date": "2026-06-21", "time": "12:30", "title": "Website + audit", "category": "Build", "notes": "Landing page copy, audit template, and Loom flow.", "done": false}, {"id": "d4-t4", "day": 4, "date": "2026-06-21", "time": "14:00", "title": "Content batch", "category": "Content", "notes": "Record 3-4 videos or build carousel posts.", "done": false}, {"id": "d4-t5", "day": 4, "date": "2026-06-21", "time": "17:30", "title": "Post + tracker", "category": "Review", "notes": "Publish or schedule content and update tracker.", "done": false}, {"id": "d5-t1", "day": 5, "date": "2026-06-22", "time": "07:30", "title": "Ad swipe + learning", "category": "Learning", "notes": "Save 3 ads and write why they work.", "done": false}, {"id": "d5-t2", "day": 5, "date": "2026-06-22", "time": "12:30", "title": "Lead capture", "category": "Leads", "notes": "Save 5 target businesses and note their weak point.", "done": false}, {"id": "d5-t3", "day": 5, "date": "2026-06-22", "time": "18:30", "title": "First proof posts", "category": "Build", "notes": "Intro video, website fix post, and daily tracker.", "done": false}, {"id": "d5-t4", "day": 5, "date": "2026-06-22", "time": "19:15", "title": "Content creation", "category": "Content", "notes": "Create one proof post or carousel from today’s task.", "done": false}, {"id": "d5-t5", "day": 5, "date": "2026-06-22", "time": "20:15", "title": "Outreach / audit block", "category": "Outreach", "notes": "Send DMs, prep Looms, or record audit videos.", "done": false}, {"id": "d5-t6", "day": 5, "date": "2026-06-22", "time": "21:00", "title": "Daily review", "category": "Review", "notes": "Log posts, leads, DMs, audits, replies, and tomorrow’s next action.", "done": false}, {"id": "d6-t1", "day": 6, "date": "2026-06-23", "time": "07:30", "title": "Ad swipe + learning", "category": "Learning", "notes": "Save 3 ads and write why they work.", "done": false}, {"id": "d6-t2", "day": 6, "date": "2026-06-23", "time": "12:30", "title": "Lead capture", "category": "Leads", "notes": "Save 5 target businesses and note their weak point.", "done": false}, {"id": "d6-t3", "day": 6, "date": "2026-06-23", "time": "18:30", "title": "Ad research library", "category": "Build", "notes": "Save 20 ads, write hooks, create swipe file.", "done": false}, {"id": "d6-t4", "day": 6, "date": "2026-06-23", "time": "19:15", "title": "Content creation", "category": "Content", "notes": "Create one proof post or carousel from today’s task.", "done": false}, {"id": "d6-t5", "day": 6, "date": "2026-06-23", "time": "20:15", "title": "Outreach / audit block", "category": "Outreach", "notes": "Send DMs, prep Looms, or record audit videos.", "done": false}, {"id": "d6-t6", "day": 6, "date": "2026-06-23", "time": "21:00", "title": "Daily review", "category": "Review", "notes": "Log posts, leads, DMs, audits, replies, and tomorrow’s next action.", "done": false}, {"id": "d7-t1", "day": 7, "date": "2026-06-24", "time": "07:30", "title": "Ad swipe + learning", "category": "Learning", "notes": "Save 3 ads and write why they work.", "done": false}, {"id": "d7-t2", "day": 7, "date": "2026-06-24", "time": "12:30", "title": "Lead capture", "category": "Leads", "notes": "Save 5 target businesses and note their weak point.", "done": false}, {"id": "d7-t3", "day": 7, "date": "2026-06-24", "time": "18:30", "title": "Lead list build", "category": "Build", "notes": "Find 50 leads and write DM/follow-up scripts.", "done": false}, {"id": "d7-t4", "day": 7, "date": "2026-06-24", "time": "19:15", "title": "Content creation", "category": "Content", "notes": "Create one proof post or carousel from today’s task.", "done": false}, {"id": "d7-t5", "day": 7, "date": "2026-06-24", "time": "20:15", "title": "Outreach / audit block", "category": "Outreach", "notes": "Send DMs, prep Looms, or record audit videos.", "done": false}, {"id": "d7-t6", "day": 7, "date": "2026-06-24", "time": "21:00", "title": "Daily review", "category": "Review", "notes": "Log posts, leads, DMs, audits, replies, and tomorrow’s next action.", "done": false}, {"id": "d8-t1", "day": 8, "date": "2026-06-25", "time": "07:30", "title": "Ad swipe + learning", "category": "Learning", "notes": "Save 3 ads and write why they work.", "done": false}, {"id": "d8-t2", "day": 8, "date": "2026-06-25", "time": "12:30", "title": "Lead capture", "category": "Leads", "notes": "Save 5 target businesses and note their weak point.", "done": false}, {"id": "d8-t3", "day": 8, "date": "2026-06-25", "time": "18:30", "title": "Content batch", "category": "Build", "notes": "Create 4 videos, 2 carousels, and schedule posts.", "done": false}, {"id": "d8-t4", "day": 8, "date": "2026-06-25", "time": "19:15", "title": "Content creation", "category": "Content", "notes": "Create one proof post or carousel from today’s task.", "done": false}, {"id": "d8-t5", "day": 8, "date": "2026-06-25", "time": "20:15", "title": "Outreach / audit block", "category": "Outreach", "notes": "Send DMs, prep Looms, or record audit videos.", "done": false}, {"id": "d8-t6", "day": 8, "date": "2026-06-25", "time": "21:00", "title": "Daily review", "category": "Review", "notes": "Log posts, leads, DMs, audits, replies, and tomorrow’s next action.", "done": false}, {"id": "d9-t1", "day": 9, "date": "2026-06-26", "time": "07:30", "title": "Ad swipe + learning", "category": "Learning", "notes": "Save 3 ads and write why they work.", "done": false}, {"id": "d9-t2", "day": 9, "date": "2026-06-26", "time": "12:30", "title": "Lead capture", "category": "Leads", "notes": "Save 5 target businesses and note their weak point.", "done": false}, {"id": "d9-t3", "day": 9, "date": "2026-06-26", "time": "18:30", "title": "First outreach", "category": "Build", "notes": "Send 20 DMs, record 2 Loom audits, log replies.", "done": false}, {"id": "d9-t4", "day": 9, "date": "2026-06-26", "time": "19:15", "title": "Content creation", "category": "Content", "notes": "Create one proof post or carousel from today’s task.", "done": false}, {"id": "d9-t5", "day": 9, "date": "2026-06-26", "time": "20:15", "title": "Outreach / audit block", "category": "Outreach", "notes": "Send DMs, prep Looms, or record audit videos.", "done": false}, {"id": "d9-t6", "day": 9, "date": "2026-06-26", "time": "21:00", "title": "Daily review", "category": "Review", "notes": "Log posts, leads, DMs, audits, replies, and tomorrow’s next action.", "done": false}, {"id": "d10-t1", "day": 10, "date": "2026-06-27", "time": "10:00", "title": "Plan sprint", "category": "Planning", "notes": "Pick one main outcome for the day.", "done": false}, {"id": "d10-t2", "day": 10, "date": "2026-06-27", "time": "10:30", "title": "Case study build", "category": "Build", "notes": "Create 2 breakdowns and before/after graphics.", "done": false}, {"id": "d10-t3", "day": 10, "date": "2026-06-27", "time": "12:30", "title": "Case study build", "category": "Build", "notes": "Create 2 breakdowns and before/after graphics.", "done": false}, {"id": "d10-t4", "day": 10, "date": "2026-06-27", "time": "14:00", "title": "Content batch", "category": "Content", "notes": "Record 3-4 videos or build carousel posts.", "done": false}, {"id": "d10-t5", "day": 10, "date": "2026-06-27", "time": "17:30", "title": "Post + tracker", "category": "Review", "notes": "Publish or schedule content and update tracker.", "done": false}, {"id": "d11-t1", "day": 11, "date": "2026-06-28", "time": "10:00", "title": "Plan sprint", "category": "Planning", "notes": "Pick one main outcome for the day.", "done": false}, {"id": "d11-t2", "day": 11, "date": "2026-06-28", "time": "10:30", "title": "System review", "category": "Build", "notes": "Fix weak assets, clean dashboard, plan Phase 2.", "done": false}, {"id": "d11-t3", "day": 11, "date": "2026-06-28", "time": "12:30", "title": "System review", "category": "Build", "notes": "Fix weak assets, clean dashboard, plan Phase 2.", "done": false}, {"id": "d11-t4", "day": 11, "date": "2026-06-28", "time": "14:00", "title": "Content batch", "category": "Content", "notes": "Record 3-4 videos or build carousel posts.", "done": false}, {"id": "d11-t5", "day": 11, "date": "2026-06-28", "time": "17:30", "title": "Post + tracker", "category": "Review", "notes": "Publish or schedule content and update tracker.", "done": false}, {"id": "d12-t1", "day": 12, "date": "2026-06-29", "time": "07:30", "title": "Ad swipe + learning", "category": "Learning", "notes": "Save 3 ads and write why they work.", "done": false}, {"id": "d12-t2", "day": 12, "date": "2026-06-29", "time": "12:30", "title": "Lead capture", "category": "Leads", "notes": "Save 5 target businesses and note their weak point.", "done": false}, {"id": "d12-t3", "day": 12, "date": "2026-06-29", "time": "18:30", "title": "Outreach repeat", "category": "Build", "notes": "Send 20 DMs, record 2 Looms, post once.", "done": false}, {"id": "d12-t4", "day": 12, "date": "2026-06-29", "time": "19:15", "title": "Content creation", "category": "Content", "notes": "Create one proof post or carousel from today’s task.", "done": false}, {"id": "d12-t5", "day": 12, "date": "2026-06-29", "time": "20:15", "title": "Outreach / audit block", "category": "Outreach", "notes": "Send DMs, prep Looms, or record audit videos.", "done": false}, {"id": "d12-t6", "day": 12, "date": "2026-06-29", "time": "21:00", "title": "Daily review", "category": "Review", "notes": "Log posts, leads, DMs, audits, replies, and tomorrow’s next action.", "done": false}, {"id": "d13-t1", "day": 13, "date": "2026-06-30", "time": "07:30", "title": "Ad swipe + learning", "category": "Learning", "notes": "Save 3 ads and write why they work.", "done": false}, {"id": "d13-t2", "day": 13, "date": "2026-06-30", "time": "12:30", "title": "Lead capture", "category": "Leads", "notes": "Save 5 target businesses and note their weak point.", "done": false}, {"id": "d13-t3", "day": 13, "date": "2026-06-30", "time": "18:30", "title": "Proof + follow-up", "category": "Build", "notes": "Post case study, follow up leads, improve pitch.", "done": false}, {"id": "d13-t4", "day": 13, "date": "2026-06-30", "time": "19:15", "title": "Content creation", "category": "Content", "notes": "Create one proof post or carousel from today’s task.", "done": false}, {"id": "d13-t5", "day": 13, "date": "2026-06-30", "time": "20:15", "title": "Outreach / audit block", "category": "Outreach", "notes": "Send DMs, prep Looms, or record audit videos.", "done": false}, {"id": "d13-t6", "day": 13, "date": "2026-06-30", "time": "21:00", "title": "Daily review", "category": "Review", "notes": "Log posts, leads, DMs, audits, replies, and tomorrow’s next action.", "done": false}, {"id": "d14-t1", "day": 14, "date": "2026-07-01", "time": "07:30", "title": "Ad swipe + learning", "category": "Learning", "notes": "Save 3 ads and write why they work.", "done": false}, {"id": "d14-t2", "day": 14, "date": "2026-07-01", "time": "12:30", "title": "Lead capture", "category": "Leads", "notes": "Save 5 target businesses and note their weak point.", "done": false}, {"id": "d14-t3", "day": 14, "date": "2026-07-01", "time": "18:30", "title": "Phase 1 review", "category": "Build", "notes": "Score dashboard, set Phase 2 targets, package beta offer.", "done": false}, {"id": "d14-t4", "day": 14, "date": "2026-07-01", "time": "19:15", "title": "Content creation", "category": "Content", "notes": "Create one proof post or carousel from today’s task.", "done": false}, {"id": "d14-t5", "day": 14, "date": "2026-07-01", "time": "20:15", "title": "Outreach / audit block", "category": "Outreach", "notes": "Send DMs, prep Looms, or record audit videos.", "done": false}, {"id": "d14-t6", "day": 14, "date": "2026-07-01", "time": "21:00", "title": "Daily review", "category": "Review", "notes": "Log posts, leads, DMs, audits, replies, and tomorrow’s next action.", "done": false}], "habits": [{"id": "h1", "name": "Ad Swipe", "emoji": "⚡", "target": "3 ads"}, {"id": "h2", "name": "Lead Capture", "emoji": "🎯", "target": "5 leads"}, {"id": "h3", "name": "Content", "emoji": "🎥", "target": "1 post"}, {"id": "h4", "name": "Outreach", "emoji": "📨", "target": "20 DMs"}, {"id": "h5", "name": "Vinted Listing", "emoji": "🏷️", "target": "list/relist"}, {"id": "h6", "name": "Daily Review", "emoji": "📊", "target": "log numbers"}], "habitChecks": {}, "vinted": [{"id": "v1", "code": "CH001", "group": "Main Pieces", "name": "Corteiz Rules The World hoodie", "bought": 15.93, "online": "£30-£50", "list": 45.0, "sold": 0, "status": "Not listed", "profitability": 78, "image": "", "notes": "Strong listing. One of the best first uploads."}, {"id": "v2", "code": "B001", "group": "Main Pieces", "name": "Stone textured polo top", "bought": 7.98, "online": "£12-£20", "list": 18.0, "sold": 0, "status": "Not listed", "profitability": 48, "image": "", "notes": "Price sensitive. Move clean with good photos."}, {"id": "v3", "code": "B002", "group": "Main Pieces", "name": "Corteiz boxy jersey", "bought": 7.98, "online": "£25-£45", "list": 42.0, "sold": 0, "status": "Not listed", "profitability": 86, "image": "", "notes": "Best main piece. Push first."}, {"id": "v4", "code": "B003", "group": "Main Pieces", "name": "Khaki print jumper", "bought": 7.98, "online": "£10-£16", "list": 16.0, "sold": 0, "status": "Not listed", "profitability": 42, "image": "", "notes": "Move fast or bundle."}, {"id": "v5", "code": "B004", "group": "Main Pieces", "name": "Nike joggers", "bought": 7.97, "online": "£12-£22", "list": 20.0, "sold": 0, "status": "Not listed", "profitability": 58, "image": "", "notes": "Solid filler item."}, {"id": "v6", "code": "C001", "group": "Main Pieces", "name": "Corteiz Guerrillaz cargos XS", "bought": 18.87, "online": "£35-£50", "list": 50.0, "sold": 0, "status": "Not listed", "profitability": 74, "image": "", "notes": "Strong branded piece."}, {"id": "v7", "code": "W001", "group": "Main Pieces", "name": "Corteiz waffle knit", "bought": 23.47, "online": "£30-£50", "list": 45.0, "sold": 0, "status": "Not listed", "profitability": 63, "image": "", "notes": "Good list value. Clean photos needed."}, {"id": "v8", "code": "P001", "group": "Main Pieces", "name": "Nike Jordan PSG tracksuit", "bought": 23.99, "online": "£18-£35", "list": 35.0, "sold": 0, "status": "Not listed", "profitability": 39, "image": "", "notes": "More price-sensitive."}, {"id": "v9", "code": "J001", "group": "Joblot", "name": "Navy Puma sweatshirt/hoodie", "bought": 1.78, "online": "£6-£14", "list": 14.0, "sold": 0, "status": "Not listed", "profitability": 55, "image": "", "notes": "Cheap mover."}, {"id": "v10", "code": "J002", "group": "Joblot", "name": "Black Nike Air swoosh sweatshirt", "bought": 1.78, "online": "£8-£18", "list": 18.0, "sold": 0, "status": "Not listed", "profitability": 72, "image": "", "notes": "Good joblot piece."}, {"id": "v11", "code": "J003", "group": "Joblot", "name": "Blue Justball-style sweatshirt", "bought": 1.78, "online": "£6-£12", "list": 10.0, "sold": 0, "status": "Not listed", "profitability": 38, "image": "", "notes": "Filler piece."}, {"id": "v12", "code": "J004", "group": "Joblot", "name": "Grey Adidas camo trefoil sweatshirt", "bought": 1.78, "online": "£10-£18", "list": 18.0, "sold": 0, "status": "Not listed", "profitability": 65, "image": "", "notes": "Strong joblot item."}, {"id": "v13", "code": "J005", "group": "Joblot", "name": "Grey Levi’s logo sweatshirt", "bought": 1.78, "online": "£5-£14", "list": 12.0, "sold": 0, "status": "Not listed", "profitability": 47, "image": "", "notes": "Medium mover."}, {"id": "v14", "code": "J006", "group": "Joblot", "name": "Black Adidas sweatshirt/hoodie", "bought": 1.78, "online": "£8-£15", "list": 14.0, "sold": 0, "status": "Not listed", "profitability": 52, "image": "", "notes": "Solid cheap mover."}, {"id": "v15", "code": "J007", "group": "Joblot", "name": "Yellow Puma hoodie/sweatshirt", "bought": 1.78, "online": "£8-£16", "list": 16.0, "sold": 0, "status": "Not listed", "profitability": 60, "image": "", "notes": "Bright colour, good visual."}, {"id": "v16", "code": "J008", "group": "Joblot", "name": "Black Adidas training top", "bought": 1.78, "online": "£8-£14", "list": 12.0, "sold": 0, "status": "Not listed", "profitability": 44, "image": "", "notes": "Cheap mover."}, {"id": "v17", "code": "J009", "group": "Joblot", "name": "Black/red Airness Y2K top", "bought": 1.78, "online": "£10-£18", "list": 16.0, "sold": 0, "status": "Not listed", "profitability": 64, "image": "", "notes": "Y2K angle."}, {"id": "v18", "code": "J010", "group": "Joblot", "name": "Red/white/black Adidas Originals sweatshirt", "bought": 1.78, "online": "£12-£22", "list": 20.0, "sold": 0, "status": "Not listed", "profitability": 71, "image": "", "notes": "Best later joblot item."}, {"id": "v19", "code": "J011", "group": "Joblot", "name": "Black performance long sleeve top", "bought": 1.78, "online": "£6-£10", "list": 9.0, "sold": 0, "status": "Not listed", "profitability": 25, "image": "", "notes": "Price to move."}, {"id": "v20", "code": "J012", "group": "Joblot", "name": "Light blue Lotto sweatshirt", "bought": 1.78, "online": "£8-£12", "list": 10.0, "sold": 0, "status": "Not listed", "profitability": 35, "image": "", "notes": "Lower-grade piece."}, {"id": "v21", "code": "J013", "group": "Joblot", "name": "Grey/black/orange Jako sports top", "bought": 1.78, "online": "£6-£10", "list": 8.0, "sold": 0, "status": "Not listed", "profitability": 22, "image": "", "notes": "Bundle or quick sale."}], "accounts": [{"id": "a1", "name": "Vinted account refresh", "handle": "Update bio, profile and shop note", "done": false}, {"id": "a2", "name": "bill.y2k content account", "handle": "Personal brand / dashboard / resale", "done": false}, {"id": "a3", "name": "Listing photo system", "handle": "White background, front/back, detail shots", "done": false}, {"id": "a4", "name": "Lead/content folders", "handle": "Brand / Content / Leads / Vinted / Reports", "done": false}], "content": [{"id": "c1", "title": "Reselling dashboard build from zero", "type": "Journey", "status": "Idea"}, {"id": "c2", "title": "Best pieces from the joblot", "type": "Vinted", "status": "Idea"}, {"id": "c3", "title": "How I price clothes for profit", "type": "Education", "status": "Idea"}], "leads": [{"id": "l1", "business": "Example Clothing Brand", "niche": "Streetwear", "problem": "No conversion path", "status": "New", "next": "Record Loom"}], "notes": "", "stats": {"dms": 0, "looms": 0, "posts": 0, "replies": 0}, "settings": {"selectedDay": 1}};
+const STORAGE_KEY = "billy2k_dashboard_v3";
+const OLD_KEYS = ["vgl_phase1_dashboard_v1"];
+const APP_VERSION = "3.0.0";
+
+let data = loadData();
+let selectedDay = Number(data.settings?.selectedDay || 1);
+let currentView = "dash";
+let taskFilter = "day";
+let vintedFilter = "all";
+
+function clone(obj){return JSON.parse(JSON.stringify(obj));}
+function id(x){return document.getElementById(x);}
+function money(n){return "£" + Number(n || 0).toFixed(2).replace(".00","");}
+function escapeHtml(s){return String(s ?? "").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
+function fmtDate(dateStr){const d=new Date(dateStr+"T00:00:00");return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});}
+
+function loadData(){
+  let saved = null;
+  try{ const raw = localStorage.getItem(STORAGE_KEY); if(raw) saved = JSON.parse(raw); }catch(e){}
+  if(!saved){
+    for(const k of OLD_KEYS){
+      try{ const raw = localStorage.getItem(k); if(raw){ saved = JSON.parse(raw); break; } }catch(e){}
+    }
+  }
+  const merged = clone(DEFAULT_DATA);
+  if(saved && typeof saved === "object"){
+    merged.tasks = Array.isArray(saved.tasks) ? saved.tasks : merged.tasks;
+    merged.habits = Array.isArray(saved.habits) ? saved.habits : merged.habits;
+    merged.habitChecks = saved.habitChecks || {};
+    merged.accounts = Array.isArray(saved.accounts) ? saved.accounts : merged.accounts;
+    merged.content = Array.isArray(saved.content) ? saved.content : merged.content;
+    merged.leads = Array.isArray(saved.leads) ? saved.leads : merged.leads;
+    merged.notes = saved.notes || "";
+    merged.stats = {...merged.stats, ...(saved.stats||{})};
+    merged.settings = {...merged.settings, ...(saved.settings||{})};
+    // Keep vinted defaults unless saved vinted exists
+    merged.vinted = Array.isArray(saved.vinted) ? saved.vinted : merged.vinted;
+  }
+  merged.version = APP_VERSION;
+  return merged;
+}
+function saveData(){
+  data.settings = data.settings || {};
+  data.settings.selectedDay = selectedDay;
+  data.version = APP_VERSION;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  render();
+}
+function switchView(view){
+  currentView=view;
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  id("view-"+view).classList.add("active");
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active", b.dataset.view===view));
+  render();
+}
+function dayTasks(day){return data.tasks.filter(t=>Number(t.day)===Number(day)).sort((a,b)=>String(a.time).localeCompare(String(b.time)));}
+function allDays(){return [...new Set(data.tasks.map(t=>Number(t.day)))].sort((a,b)=>a-b);}
+function dayPct(day){const arr=dayTasks(day);return arr.length?Math.round(arr.filter(t=>t.done).length/arr.length*100):0;}
+function overallPct(){
+  const total=data.tasks.length+data.accounts.length;
+  const done=data.tasks.filter(t=>t.done).length+data.accounts.filter(a=>a.done).length;
+  return total?Math.round(done/total*100):0;
+}
+function habitKey(h,d){return `${h}:${d}`;}
+function habitOn(h,d){return !!data.habitChecks[habitKey(h,d)];}
+function toggleHabit(h,d){data.habitChecks[habitKey(h,d)] = !data.habitChecks[habitKey(h,d)]; saveData();}
+function habitPct(h){const days=allDays();return days.length?Math.round(days.filter(d=>habitOn(h.id,d)).length/days.length*100):0;}
+
+function vProfit(item){
+  const price = item.status==="Sold" && Number(item.sold)>0 ? Number(item.sold) : Number(item.list);
+  return price - Number(item.bought || 0);
+}
+function vSoldRevenue(){return data.vinted.filter(i=>i.status==="Sold").reduce((a,i)=>a+Number(i.sold||0),0);}
+function vSoldProfit(){return data.vinted.filter(i=>i.status==="Sold").reduce((a,i)=>a+(Number(i.sold||0)-Number(i.bought||0)),0);}
+function vListedValue(){return data.vinted.filter(i=>i.status==="Listed").reduce((a,i)=>a+Number(i.list||0),0);}
+function vPotentialProfit(){return data.vinted.reduce((a,i)=>a+(Number(i.list||0)-Number(i.bought||0)),0);}
+function vTotalSpent(){return data.vinted.reduce((a,i)=>a+Number(i.bought||0),0);}
+
+function render(){
+  id("versionLabel").textContent = "v" + APP_VERSION;
+  id("kpiScore").textContent = overallPct()+"%";
+  id("kpiTasks").textContent = data.tasks.filter(t=>t.done).length+"/"+data.tasks.length;
+  id("kpiSold").textContent = money(vSoldRevenue());
+  id("kpiProfit").textContent = money(vSoldProfit());
+  id("overallBar").style.width = overallPct()+"%";
+  renderDash(); renderTracker(); renderTasks(); renderVinted(); renderLeads(); renderVault();
+}
+function renderDash(){
+  const arr=dayTasks(selectedDay), pct=dayPct(selectedDay);
+  id("selectedDayTitle").textContent = `DAY ${selectedDay} • ${arr[0]?fmtDate(arr[0].date):""}`;
+  id("selectedDayPct").textContent = pct+"%";
+  id("selectedDayBar").style.width = pct+"%";
+  id("todayTaskList").innerHTML = arr.map(renderTask).join("") || "<p class='sub'>No tasks for this day.</p>";
+  id("dayStrip").innerHTML = allDays().map(day=>`<button class="dayBtn ${day===selectedDay?"active":""}" onclick="selectedDay=${day}; saveData();"><strong>Day ${day}</strong><small>${dayTasks(day)[0]?fmtDate(dayTasks(day)[0].date):""}</small><small>${dayPct(day)}% complete</small></button>`).join("");
+  const cats=["Learning","Leads","Build","Content","Outreach","Review"];
+  id("analysisBars").innerHTML = cats.map(cat=>{
+    const group=data.tasks.filter(t=>t.category===cat), done=group.filter(t=>t.done).length, pct=group.length?Math.round(done/group.length*100):0;
+    return `<div class="miniBarRow"><div><div class="miniLabel"><span>${cat}</span><span>${done}/${group.length}</span></div><div class="analysisBar"><div class="analysisFill" style="width:${pct}%"></div></div></div><div class="miniPercent">${pct}%</div></div>`;
+  }).join("");
+}
+function renderTracker(){
+  const days=allDays();
+  id("habitGrid").innerHTML = `<div></div>${days.map(d=>`<div class="weekHead">D${d}</div>`).join("")}${data.habits.map(h=>`<div class="habitName"><span>${escapeHtml(h.emoji)}</span><span>${escapeHtml(h.name)}</span></div>${days.map(day=>`<button class="habitCell ${habitOn(h.id,day)?"on":""}" onclick="toggleHabit('${h.id}',${day})">✓</button>`).join("")}`).join("")}`;
+  id("habitAnalysis").innerHTML = data.habits.map(h=>{const pct=habitPct(h);return `<div class="miniBarRow"><div><div class="miniLabel"><span>${escapeHtml(h.emoji)} ${escapeHtml(h.name)}</span><span>${escapeHtml(h.target)}</span></div><div class="analysisBar"><div class="analysisFill" style="width:${pct}%"></div></div></div><div class="miniPercent">${pct}%</div></div>`;}).join("");
+}
+function setTaskFilter(f){taskFilter=f;document.querySelectorAll("#taskFilters .chip").forEach(c=>c.classList.toggle("active",c.dataset.filter===f));renderTasks();}
+function renderTasks(){
+  let arr=[...data.tasks];
+  if(taskFilter==="day") arr=dayTasks(selectedDay);
+  if(taskFilter==="open") arr=arr.filter(t=>!t.done);
+  if(taskFilter==="done") arr=arr.filter(t=>t.done);
+  if(taskFilter==="outreach") arr=arr.filter(t=>["Outreach","Leads","Audit"].includes(t.category));
+  arr.sort((a,b)=>(String(a.date)+String(a.time)).localeCompare(String(b.date)+String(b.time)));
+  id("taskList").innerHTML = arr.map(renderTask).join("") || "<p class='sub'>Nothing here.</p>";
+}
+function renderTask(t){
+  return `<div class="task ${t.done?"done":""}"><button class="check" onclick="toggleTask('${t.id}')">✓</button><div onclick="openTaskModal('${t.id}')"><div class="taskMeta">${escapeHtml(t.time)} • DAY ${t.day} • ${escapeHtml(t.category)}</div><div class="taskTitle">${escapeHtml(t.title)}</div><div class="taskNotes">${escapeHtml(t.notes)}</div></div><button class="editBtn" onclick="openTaskModal('${t.id}')">Edit</button></div>`;
+}
+function toggleTask(tid){const t=data.tasks.find(x=>x.id===tid);if(t){t.done=!t.done;saveData();}}
+
+function setVintedFilter(f){vintedFilter=f;document.querySelectorAll("#vintedFilters .chip").forEach(c=>c.classList.toggle("active",c.dataset.filter===f));renderVinted();}
+function renderVinted(){
+  id("vSpent").textContent = money(vTotalSpent());
+  id("vListed").textContent = money(vListedValue());
+  id("vSold").textContent = money(vSoldRevenue());
+  id("vProfit").textContent = money(vSoldProfit());
+  id("vPotential").textContent = money(vPotentialProfit());
+  id("vCounts").textContent = `${data.vinted.filter(i=>i.status==="Listed").length} listed • ${data.vinted.filter(i=>i.status==="Sold").length} sold • ${data.vinted.length} total`;
+  let arr=[...data.vinted];
+  if(vintedFilter==="listed") arr=arr.filter(i=>i.status==="Listed");
+  if(vintedFilter==="sold") arr=arr.filter(i=>i.status==="Sold");
+  if(vintedFilter==="main") arr=arr.filter(i=>i.group==="Main Pieces");
+  if(vintedFilter==="joblot") arr=arr.filter(i=>i.group==="Joblot");
+  arr.sort((a,b)=>String(a.code).localeCompare(String(b.code)));
+  id("vintedList").innerHTML = arr.map(renderVintedItem).join("") || "<p class='sub'>No items in this filter.</p>";
+}
+function renderVintedItem(i){
+  const profit = vProfit(i);
+  const pct = Math.max(0, Math.min(100, Number(i.profitability||0)));
+  const statusClass = String(i.status).replace(" ","");
+  const img = i.image ? `<img src="${escapeHtml(i.image)}" alt="">` : `<span>${escapeHtml(i.code)}<br>${escapeHtml(i.group)}</span>`;
+  return `<div class="itemCard">
+    <div class="itemInner">
+      <div class="itemImg">${img}</div>
+      <div>
+        <div class="itemHead">
+          <div><div class="itemCode">${escapeHtml(i.code)} |</div><div class="itemName">${escapeHtml(i.name)}</div></div>
+          <div class="statusPill ${statusClass}">${escapeHtml(i.status)}</div>
+        </div>
+        <div class="priceGrid">
+          <div class="priceBox"><small>Bought</small><strong>${money(i.bought)}</strong></div>
+          <div class="priceBox"><small>Online</small><strong>${escapeHtml(i.online)}</strong></div>
+          <div class="priceBox"><small>${i.status==="Sold"?"Sold":"List"}</small><strong>${i.status==="Sold" && Number(i.sold)>0 ? money(i.sold) : money(i.list)}</strong></div>
+          <div class="priceBox"><small>Profit</small><strong class="profit">${money(profit)}</strong></div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="miniLabel"><span>Profitability</span><span>${pct}%</span></div>
+          <div class="progressWrap"><div class="progressBar" style="width:${pct}%"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="itemActions">
+      <button class="secondary" onclick="setItemStatus('${i.id}','Listed')">Listed</button>
+      <button class="primary" onclick="quickSell('${i.id}')">Sold</button>
+      <button class="ghost" onclick="setItemStatus('${i.id}','Not listed')">Reset</button>
+      <button class="ghost" onclick="openVintedModal('${i.id}')">Edit</button>
+    </div>
+  </div>`;
+}
+function setItemStatus(vid,status){const item=data.vinted.find(x=>x.id===vid);if(item){item.status=status;if(status==="Sold" && !Number(item.sold)) item.sold=Number(item.list||0);saveData();}}
+function quickSell(vid){const item=data.vinted.find(x=>x.id===vid);if(!item)return;const val=prompt("Sold price?", Number(item.sold||item.list||0).toFixed(2));if(val===null)return;item.sold=Number(val)||0;item.status="Sold";saveData();}
+
+function renderLeads(){
+  id("dmsCount").textContent=data.stats.dms||0; id("loomsCount").textContent=data.stats.looms||0; id("postsCount").textContent=data.stats.posts||0; id("repliesCount").textContent=data.stats.replies||0;
+  id("leadList").innerHTML = data.leads.map(l=>`<div class="listItem"><small>${escapeHtml(l.niche)} • ${escapeHtml(l.status)}</small><strong>${escapeHtml(l.business)}</strong><p>Problem: ${escapeHtml(l.problem)}</p><p>Next: ${escapeHtml(l.next)}</p><div style="display:flex;gap:8px;margin-top:10px"><button class="ghost" onclick="openLeadModal('${l.id}')">Edit</button><button class="ghost" onclick="deleteLead('${l.id}')">Delete</button></div></div>`).join("") || "<p class='sub'>No leads yet.</p>";
+}
+function renderVault(){
+  id("accountList").innerHTML=data.accounts.map(a=>`<div class="task ${a.done?"done":""}"><button class="check" onclick="toggleAccount('${a.id}')">✓</button><div onclick="openAccountModal('${a.id}')"><div class="taskTitle">${escapeHtml(a.name)}</div><div class="taskNotes">${escapeHtml(a.handle)}</div></div><button class="editBtn" onclick="openAccountModal('${a.id}')">Edit</button></div>`).join("");
+  id("contentList").innerHTML=data.content.map(c=>`<div class="listItem"><small>${escapeHtml(c.type)} • ${escapeHtml(c.status)}</small><strong>${escapeHtml(c.title)}</strong><button class="ghost" style="margin-top:10px" onclick="deleteContent('${c.id}')">Delete</button></div>`).join("");
+  id("notes").value=data.notes||"";
+}
+function toggleAccount(aid){const a=data.accounts.find(x=>x.id===aid);if(a){a.done=!a.done;saveData();}}
+function changeStat(k,d){data.stats[k]=Math.max(0,Number(data.stats[k]||0)+d);saveData();}
+function saveNotes(){data.notes=id("notes").value;localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}
+
+function openTaskModal(tid=null){const t=tid?data.tasks.find(x=>x.id===tid):{id:"t"+Date.now(),day:selectedDay,date:dayTasks(selectedDay)[0]?.date||"2026-06-18",time:"18:30",title:"",category:"Build",notes:"",done:false};id("taskModalTitle").textContent=tid?"Edit task":"Add task";id("taskId").value=t.id;id("taskTitleInput").value=t.title;id("taskNotesInput").value=t.notes;id("taskDate").value=t.date;id("taskTime").value=t.time;id("taskDay").value=t.day;id("taskCategory").value=t.category;id("taskModal").classList.add("open");}
+function saveTask(){const tid=id("taskId").value||"t"+Date.now();const old=data.tasks.find(t=>t.id===tid);const t={id:tid,title:id("taskTitleInput").value||"Untitled task",notes:id("taskNotesInput").value,date:id("taskDate").value,time:id("taskTime").value,day:Number(id("taskDay").value||selectedDay),category:id("taskCategory").value||"Build",done:old?.done||false};const ix=data.tasks.findIndex(x=>x.id===tid);if(ix>=0)data.tasks[ix]=t;else data.tasks.push(t);closeModals();saveData();}
+function deleteTask(){const tid=id("taskId").value;data.tasks=data.tasks.filter(t=>t.id!==tid);closeModals();saveData();}
+
+function openVintedModal(vid=null){const i=vid?data.vinted.find(x=>x.id===vid):{id:"v"+Date.now(),code:"",group:"Main Pieces",name:"",bought:0,online:"",list:0,sold:0,status:"Not listed",profitability:50,image:"",notes:""};id("vintedModalTitle").textContent=vid?"Edit Vinted item":"Add Vinted item";id("vId").value=i.id;id("vCode").value=i.code;id("vGroup").value=i.group;id("vName").value=i.name;id("vBought").value=i.bought;id("vOnline").value=i.online;id("vList").value=i.list;id("vSoldPrice").value=i.sold||"";id("vStatus").value=i.status;id("vProfitability").value=i.profitability;id("vImage").value=i.image||"";id("vNotes").value=i.notes||"";id("vintedModal").classList.add("open");}
+function saveVintedItem(){const vid=id("vId").value||"v"+Date.now();const item={id:vid,code:id("vCode").value||"NEW",group:id("vGroup").value,name:id("vName").value||"Untitled item",bought:Number(id("vBought").value||0),online:id("vOnline").value,list:Number(id("vList").value||0),sold:Number(id("vSoldPrice").value||0),status:id("vStatus").value,profitability:Number(id("vProfitability").value||0),image:id("vImage").value,notes:id("vNotes").value};const ix=data.vinted.findIndex(x=>x.id===vid);if(ix>=0)data.vinted[ix]=item;else data.vinted.push(item);closeModals();saveData();}
+function deleteVintedItem(){const vid=id("vId").value;data.vinted=data.vinted.filter(i=>i.id!==vid);closeModals();saveData();}
+
+function openLeadModal(lid=null){const l=lid?data.leads.find(x=>x.id===lid):{id:"l"+Date.now(),business:"",niche:"",problem:"",status:"New",next:""};id("leadId").value=l.id;id("leadBusiness").value=l.business;id("leadNiche").value=l.niche;id("leadProblem").value=l.problem;id("leadStatus").value=l.status;id("leadNext").value=l.next;id("leadModal").classList.add("open");}
+function saveLead(){const lid=id("leadId").value||"l"+Date.now();const l={id:lid,business:id("leadBusiness").value||"Untitled lead",niche:id("leadNiche").value,problem:id("leadProblem").value,status:id("leadStatus").value,next:id("leadNext").value};const ix=data.leads.findIndex(x=>x.id===lid);if(ix>=0)data.leads[ix]=l;else data.leads.push(l);closeModals();saveData();}
+function deleteLead(lid){data.leads=data.leads.filter(l=>l.id!==lid);saveData();}
+function openAccountModal(aid=null){const a=aid?data.accounts.find(x=>x.id===aid):{id:"a"+Date.now(),name:"",handle:"",done:false};id("accountId").value=a.id;id("accountName").value=a.name;id("accountHandle").value=a.handle;id("accountModal").classList.add("open");}
+function saveAccount(){const aid=id("accountId").value||"a"+Date.now();const old=data.accounts.find(x=>x.id===aid);const a={id:aid,name:id("accountName").value||"Untitled setup item",handle:id("accountHandle").value,done:old?.done||false};const ix=data.accounts.findIndex(x=>x.id===aid);if(ix>=0)data.accounts[ix]=a;else data.accounts.push(a);closeModals();saveData();}
+function addContent(){const title=id("newContentTitle").value.trim();if(!title)return;data.content.push({id:"c"+Date.now(),title,type:id("newContentType").value,status:"Idea"});id("newContentTitle").value="";saveData();}
+function deleteContent(cid){data.content=data.content.filter(c=>c.id!==cid);saveData();}
+function closeModals(){document.querySelectorAll(".modal").forEach(m=>m.classList.remove("open"));}
+function exportData(){const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="billy2k-dashboard-backup-v3.json";a.click();URL.revokeObjectURL(url);}
+function importData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const imported=JSON.parse(reader.result);data={...clone(DEFAULT_DATA),...imported,version:APP_VERSION};saveData();alert("Imported. The resale empire lives again.");}catch(e){alert("Import failed. The file offended the machine.");}};reader.readAsText(file);}
+function resetData(){if(confirm("Reset to fresh bill.y2k v3 dashboard?")){localStorage.removeItem(STORAGE_KEY);data=clone(DEFAULT_DATA);selectedDay=1;render();}}
+
+document.addEventListener("click",e=>{if(e.target.classList.contains("modal"))closeModals();});
+document.addEventListener("DOMContentLoaded",()=>{
+  document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
+  document.querySelectorAll("#taskFilters .chip").forEach(c=>c.addEventListener("click",()=>setTaskFilter(c.dataset.filter)));
+  document.querySelectorAll("#vintedFilters .chip").forEach(c=>c.addEventListener("click",()=>setVintedFilter(c.dataset.filter)));
+  id("quickDaySelect").innerHTML=allDays().map(d=>`<option value="${d}">Day ${d}</option>`).join("");
+  id("quickDaySelect").value=selectedDay;
+  id("quickDaySelect").addEventListener("change",e=>{selectedDay=Number(e.target.value);saveData();});
+  if("serviceWorker" in navigator){navigator.serviceWorker.register("./service-worker.js").catch(()=>{});}
+  render();
+});
+</script>
+</body>
+</html>
