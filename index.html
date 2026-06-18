@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0A1834">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="VGL">
+  <title>VGL Phase 1 Dashboard</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">VGL</div>
+        <div>
+          <h1>Phase 1 Dashboard</h1>
+          <p>Verguson Growth Lab • offline tracker</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="hero">
+      <h2>Build the shell. Create proof. Start outreach.</h2>
+      <p>Check off the plan, edit tasks, track leads, save content ideas, and keep the agency from becoming another beautiful non-existent empire.</p>
+      <div class="kpis">
+        <div class="kpi"><small>Overall</small><strong id="overallProgressText">0%</strong></div>
+        <div class="kpi"><small>Tasks</small><strong id="kpiTasks">0/0</strong></div>
+        <div class="kpi"><small>Accounts</small><strong id="kpiAccounts">0/0</strong></div>
+        <div class="kpi"><small>Leads</small><strong id="kpiLeads">0</strong></div>
+      </div>
+      <div class="progressWrap"><div class="progressBar" id="overallProgressBar"></div></div>
+    </section>
+
+    <section class="view active" id="view-home">
+      <div class="card">
+        <div class="row">
+          <div>
+            <h3 id="todayTitle">Today</h3>
+            <p class="installBox">Pick a day and work through it.</p>
+          </div>
+          <select id="selectDay" class="input" style="max-width:120px">
+            <option value="1">Day 1</option><option value="2">Day 2</option><option value="3">Day 3</option><option value="4">Day 4</option>
+            <option value="5">Day 5</option><option value="6">Day 6</option><option value="7">Day 7</option><option value="8">Day 8</option>
+            <option value="9">Day 9</option><option value="10">Day 10</option><option value="11">Day 11</option><option value="12">Day 12</option>
+            <option value="13">Day 13</option><option value="14">Day 14</option>
+          </select>
+        </div>
+        <div class="row" style="margin:8px 0 12px">
+          <span class="installBox">Day progress</span><strong id="todayProgressText">0%</strong>
+        </div>
+        <div class="progressWrap"><div class="progressBar" id="todayProgressBar"></div></div>
+      </div>
+      <div class="card">
+        <div class="row">
+          <h3>Day tasks</h3>
+          <button class="secondary" onclick="openTaskModal()">+ Add</button>
+        </div>
+        <div id="todayTasks"></div>
+      </div>
+      <div class="card">
+        <h3>Quick numbers</h3>
+        <div class="statBtns">
+          <button class="statBtn" onclick="changeStat('dms',1)"><small>DMs</small><strong id="dmsCount">0</strong></button>
+          <button class="statBtn" onclick="changeStat('looms',1)"><small>Looms</small><strong id="loomsCount">0</strong></button>
+          <button class="statBtn" onclick="changeStat('posts',1)"><small>Posts</small><strong id="postsCount">0</strong></button>
+          <button class="statBtn" onclick="changeStat('replies',1)"><small>Replies</small><strong id="repliesCount">0</strong></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-calendar">
+      <div class="card">
+        <h3>14-day calendar</h3>
+        <div class="grid2" id="dayPicker"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-tasks">
+      <div class="card">
+        <div class="row"><h3>All tasks</h3><button class="secondary" onclick="openTaskModal()">+ Add</button></div>
+        <div class="filters">
+          <button class="chip active" data-filter="today">Selected day</button>
+          <button class="chip" data-filter="open">Open</button>
+          <button class="chip" data-filter="done">Done</button>
+          <button class="chip" data-filter="outreach">Outreach</button>
+          <button class="chip" data-filter="all">All</button>
+        </div>
+        <div id="taskList"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-assets">
+      <div class="card">
+        <div class="row"><h3>Accounts + setup</h3><button class="secondary" onclick="openAccountModal()">+ Add</button></div>
+        <div id="accountList"></div>
+      </div>
+      <div class="card">
+        <h3>Content vault</h3>
+        <div class="form">
+          <input id="newContentTitle" class="input" placeholder="New content idea">
+          <select id="newContentType" class="input">
+            <option>Journey</option><option>Audit</option><option>Breakdown</option><option>Ad ideas</option><option>Education</option>
+          </select>
+          <button class="primary" onclick="addContent()">Add content idea</button>
+        </div>
+        <div id="contentList"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-leads">
+      <div class="card">
+        <div class="row"><h3>Lead tracker</h3><button class="secondary" onclick="openLeadModal()">+ Add</button></div>
+        <div id="leadList"></div>
+      </div>
+      <div class="card">
+        <h3>Notes</h3>
+        <textarea id="notes" oninput="saveNotes()" placeholder="Drop scripts, ideas, objections, or reminders here."></textarea>
+      </div>
+    </section>
+
+    <section class="view" id="view-settings">
+      <div class="card">
+        <h3>Install on iPhone</h3>
+        <p class="installBox">
+          Open the dashboard in Safari, tap Share, then Add to Home Screen. For proper offline PWA mode, host this folder on Netlify or GitHub Pages first, then add that web link to your home screen. Because naturally the phone wants a small ritual before showing an icon.
+        </p>
+        <button class="primary" onclick="installPrompt()">Show install reminder</button>
+      </div>
+      <div class="card">
+        <h3>Backup</h3>
+        <button class="secondary" onclick="exportData()">Export backup JSON</button>
+        <label class="secondary" style="display:block;text-align:center;margin-top:10px">Import backup JSON<input type="file" accept="application/json" onchange="importData(this)" hidden></label>
+        <hr>
+        <button class="danger" onclick="resetData()">Reset dashboard</button>
+      </div>
+    </section>
+
+    <nav class="tabs">
+      <button class="tab active" data-view="home">Home</button>
+      <button class="tab" data-view="calendar">Calendar</button>
+      <button class="tab" data-view="tasks">Tasks</button>
+      <button class="tab" data-view="assets">Assets</button>
+      <button class="tab" data-view="leads">Leads</button>
+    </nav>
+  </main>
+
+  <div class="modal" id="taskModal">
+    <div class="modalPanel">
+      <h3 id="modalTitle">Edit task</h3>
+      <div class="form">
+        <input type="hidden" id="taskId">
+        <input class="input" id="taskTitleInput" placeholder="Task title">
+        <textarea id="taskNotesInput" placeholder="Notes"></textarea>
+        <div class="grid2">
+          <input class="input" id="taskDate" type="date">
+          <input class="input" id="taskTime" type="time">
+          <input class="input" id="taskDay" type="number" min="1" max="99">
+          <input class="input" id="taskCategory" placeholder="Category">
+        </div>
+        <button class="primary" onclick="saveTask()">Save task</button>
+        <button class="danger" onclick="deleteTask()">Delete task</button>
+        <button class="secondary" onclick="closeModals()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="accountModal">
+    <div class="modalPanel">
+      <h3>Edit account/setup item</h3>
+      <div class="form">
+        <input type="hidden" id="accountId">
+        <input class="input" id="accountName" placeholder="Name">
+        <input class="input" id="accountHandle" placeholder="Handle / detail">
+        <button class="primary" onclick="saveAccount()">Save</button>
+        <button class="secondary" onclick="closeModals()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="leadModal">
+    <div class="modalPanel">
+      <h3>Edit lead</h3>
+      <div class="form">
+        <input type="hidden" id="leadId">
+        <input class="input" id="leadBusiness" placeholder="Business">
+        <input class="input" id="leadNiche" placeholder="Niche">
+        <input class="input" id="leadProblem" placeholder="Problem">
+        <select class="input" id="leadStatus"><option>New</option><option>DM sent</option><option>Warm</option><option>Loom sent</option><option>Call booked</option><option>Closed</option><option>Dead</option></select>
+        <input class="input" id="leadNext" placeholder="Next action">
+        <button class="primary" onclick="saveLead()">Save lead</button>
+        <button class="secondary" onclick="closeModals()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
